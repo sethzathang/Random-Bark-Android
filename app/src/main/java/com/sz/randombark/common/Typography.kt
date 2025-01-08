@@ -1,4 +1,4 @@
-package com.sz.randombark.ui.theme
+package com.sz.randombark.common
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
