@@ -4,14 +4,21 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.sz.randombark.common.RandomBarkTheme
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sz.randombark.common.themes.RandomBarkTheme
+import com.sz.randombark.feature.presentation.RandomBarkViewModel
+import com.sz.randombark.feature.presentation.RandomDogUIModel
+import com.sz.randombark.feature.presentation.ViewState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,11 +27,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val viewModel: RandomBarkViewModel by viewModels()
             RandomBarkTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding),
+                        viewModel = viewModel
                     )
                 }
             }
@@ -33,17 +41,28 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun Greeting(
+    modifier: Modifier = Modifier,
+    viewModel: RandomBarkViewModel
+) {
+    val uiState by viewModel.viewState.collectAsStateWithLifecycle()
+    when (uiState) {
+        is ViewState.Loading -> {
+            CircularProgressIndicator(modifier = modifier)
+        }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    RandomBarkTheme {
-        Greeting("Android")
+        is ViewState.Error -> {
+            Text(
+                modifier = modifier,
+                text = (uiState as ViewState.Error).message
+            )
+        }
+
+        is ViewState.Success -> {
+            Text(
+                modifier = modifier,
+                text = (uiState as ViewState.Success<RandomDogUIModel>).data.imageUrl
+            )
+        }
     }
 }

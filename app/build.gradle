@@ -57,6 +57,10 @@ dependencies {
     implementation libs.hilt.android
     kapt libs.hilt.compiler
 
+    // Retrofit for network calls
+    implementation libs.network.retrofit
+    implementation libs.network.converter.gson
+
     //Testing
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit

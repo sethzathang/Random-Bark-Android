@@ -1,4 +1,4 @@
-package com.sz.randombark.common
+package com.sz.randombark.common.themes
 
 import androidx.compose.ui.graphics.Color
 
