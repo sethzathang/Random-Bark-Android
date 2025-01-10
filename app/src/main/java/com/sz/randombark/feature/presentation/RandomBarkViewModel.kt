@@ -40,10 +40,25 @@ class RandomBarkViewModel @Inject constructor(
                     is ServiceResult.Success -> {
                         _viewState.value = ViewState.Success(
                             data = RandomDogUIModel(
+                                breed = extractAndFormatDogBreed(imageUrl = result.result.imageUrl),
                                 imageUrl = result.result.imageUrl
                             )
                         )
                     }
+                }
+            }
+        }
+    }
+
+    private fun extractAndFormatDogBreed(imageUrl: String): String {
+        val pattern = """/breeds/([^/]+)/""".toRegex()
+        val result = pattern.find(imageUrl)?.groups?.get(1)?.value ?: "Other"
+        return result.split("-").joinToString(" ") { word ->
+            word.replaceFirstChar { data ->
+                if (data.isLowerCase()) {
+                    data.titlecase()
+                } else {
+                    data.toString()
                 }
             }
         }

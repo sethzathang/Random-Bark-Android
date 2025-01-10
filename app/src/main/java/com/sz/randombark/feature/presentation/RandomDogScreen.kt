@@ -18,6 +18,7 @@ import coil.compose.AsyncImage
 import com.sz.randombark.common.ViewState
 
 data class RandomDogUIModel(
+    val breed: String,
     val imageUrl: String
 )
 
@@ -45,14 +46,16 @@ fun RandomDogScreen(
                 }
 
                 is ViewState.Success -> {
+                    Text(text = "Breed: ${state.data.breed}")
                     AsyncImage(
+                        modifier = Modifier.padding(top = 16.dp),
                         model = state.data.imageUrl,
-                        contentDescription = "Random dog image"
+                        contentDescription = "random dog image"
                     )
                     Button(
                         modifier = Modifier.padding(vertical = 16.dp),
                         onClick = { viewModel.fetchRandomDog() },
-                        content = { Text(text = "Next") }
+                        content = { Text(text = "Fetch") }
                     )
                 }
             }
