@@ -15,6 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.sz.randombark.common.ViewState
+
+data class RandomDogUIModel(
+    val imageUrl: String
+)
 
 @Composable
 fun RandomDogScreen(

@@ -10,15 +10,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 /**
- * Define a sealed class to represent different states of network results
- */
-sealed class NetworkResult<out ResponseType> {
-    data class Success<out ResponseType>(val result: ResponseType) : NetworkResult<ResponseType>()
-    data class Error(val error: Throwable) : NetworkResult<Nothing>()
-    data object Loading : NetworkResult<Nothing>()
-}
-
-/**
  * Dagger module to provide the [NetworkService] instance.
  */
 @Module

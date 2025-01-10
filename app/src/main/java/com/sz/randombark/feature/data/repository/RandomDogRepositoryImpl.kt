@@ -1,8 +1,8 @@
 package com.sz.randombark.feature.data.repository
 
+import com.sz.randombark.common.ServiceResult
 import com.sz.randombark.feature.data.api.NetworkService
 import com.sz.randombark.feature.data.model.RandomDogImageReply
-import com.sz.randombark.module.NetworkResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -20,22 +20,22 @@ import javax.inject.Inject
 class RandomDogRepositoryImpl @Inject constructor(
     private val network: NetworkService
 ) : RandomDogRepository {
-    override suspend fun getRandomDogImage(): Flow<NetworkResult<RandomDogImageReply>> = flow {
+    override suspend fun getRandomDogImage(): Flow<ServiceResult<RandomDogImageReply>> = flow {
         // Emit a loading state before starting the network request
-        emit(NetworkResult.Loading)
+        emit(ServiceResult.Loading)
         // Use runCatching to handle success and error scenarios, can also do try/catch
         runCatching {
             network.fetchRandomDogImage()
         }.fold(
             onSuccess = { result ->
                 if (result.status.equals(other = "success", ignoreCase = true)) {
-                    emit(NetworkResult.Success(result))
+                    emit(ServiceResult.Success(result))
                 } else {
-                    emit(NetworkResult.Error(Throwable("Invalid response status")))
+                    emit(ServiceResult.Error(Throwable("Invalid response status")))
                 }
             },
             onFailure = { exception ->
-                emit(NetworkResult.Error(error = exception))
+                emit(ServiceResult.Error(error = exception))
             }
         )
     }.flowOn(Dispatchers.IO)

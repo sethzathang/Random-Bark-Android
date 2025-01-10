@@ -2,7 +2,8 @@ package com.sz.randombark.feature.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sz.randombark.module.NetworkResult
+import com.sz.randombark.common.ServiceResult
+import com.sz.randombark.common.ViewState
 import com.sz.randombark.feature.data.repository.RandomDogRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,21 +23,21 @@ class RandomBarkViewModel @Inject constructor(
         fetchRandomDog()
     }
 
-     fun fetchRandomDog() {
+    fun fetchRandomDog() {
         viewModelScope.launch {
             repository.getRandomDogImage().collect { result ->
                 when (result) {
-                    is NetworkResult.Loading -> {
+                    is ServiceResult.Loading -> {
                         _viewState.value = ViewState.Loading
                     }
 
-                    is NetworkResult.Error -> {
+                    is ServiceResult.Error -> {
                         _viewState.value = ViewState.Error(
                             message = result.error.message ?: "Unknown Network Error"
                         )
                     }
 
-                    is NetworkResult.Success -> {
+                    is ServiceResult.Success -> {
                         _viewState.value = ViewState.Success(
                             data = RandomDogUIModel(
                                 imageUrl = result.result.imageUrl
@@ -48,13 +49,3 @@ class RandomBarkViewModel @Inject constructor(
         }
     }
 }
-
-sealed class ViewState<out Type> {
-    data object Loading : ViewState<Nothing>()
-    data class Success<out Type>(val data: Type) : ViewState<Type>()
-    data class Error(val message: String) : ViewState<Nothing>()
-}
-
-data class RandomDogUIModel(
-    val imageUrl: String
-)
