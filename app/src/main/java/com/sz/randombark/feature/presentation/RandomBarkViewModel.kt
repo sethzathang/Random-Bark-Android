@@ -19,10 +19,10 @@ class RandomBarkViewModel @Inject constructor(
     val viewState: StateFlow<ViewState<RandomDogUIModel>> = _viewState
 
     init {
-        fetchData()
+        fetchRandomDog()
     }
 
-    private fun fetchData() {
+     fun fetchRandomDog() {
         viewModelScope.launch {
             repository.getRandomDogImage().collect { result ->
                 when (result) {
@@ -32,14 +32,14 @@ class RandomBarkViewModel @Inject constructor(
 
                     is NetworkResult.Error -> {
                         _viewState.value = ViewState.Error(
-                            message = result.error.message ?: "Network Error"
+                            message = result.error.message ?: "Unknown Network Error"
                         )
                     }
 
                     is NetworkResult.Success -> {
                         _viewState.value = ViewState.Success(
                             data = RandomDogUIModel(
-                                imageUrl = result.result.imageUrl ?: ""
+                                imageUrl = result.result.imageUrl
                             )
                         )
                     }

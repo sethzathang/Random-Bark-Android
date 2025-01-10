@@ -29,8 +29,8 @@ class RandomDogRepositoryImpl @Inject constructor(
         emit(NetworkResult.Loading)
 
         // Use runCatching to handle success and error scenarios, can also do try/catch
-        runCatching { 
-            network.fetch<RandomDogReply>(endpoint = "/breeds/image/random")
+        runCatching {
+            network.fetch()
         }.fold(
             onSuccess = { result ->
                 if (result.status.equals(other = "success", ignoreCase = true)) {
