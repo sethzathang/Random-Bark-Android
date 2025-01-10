@@ -1,8 +1,8 @@
-package com.sz.randombark.feature.data.reply
+package com.sz.randombark.feature.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class RandomDogReply(
+data class RandomDogImageReply(
     @SerializedName("message")
     val imageUrl: String,
 

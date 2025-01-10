@@ -2,7 +2,7 @@ package com.sz.randombark.feature.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sz.randombark.appModule.NetworkResult
+import com.sz.randombark.module.NetworkResult
 import com.sz.randombark.feature.data.repository.RandomDogRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

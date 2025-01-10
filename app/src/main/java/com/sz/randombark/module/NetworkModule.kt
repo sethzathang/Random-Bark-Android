@@ -1,22 +1,13 @@
-package com.sz.randombark.appModule
+package com.sz.randombark.module
 
-import com.sz.randombark.feature.data.reply.RandomDogReply
+import com.sz.randombark.feature.data.api.NetworkService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
 import javax.inject.Singleton
-
-/**
- * Interface for making network requests.
- */
-interface NetworkService {
-    @GET("/api/breeds/image/random")
-    suspend fun fetch(): RandomDogReply
-}
 
 /**
  * Define a sealed class to represent different states of network results

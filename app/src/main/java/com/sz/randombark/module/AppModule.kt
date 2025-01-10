@@ -1,5 +1,6 @@
-package com.sz.randombark.appModule
+package com.sz.randombark.module
 
+import com.sz.randombark.feature.data.api.NetworkService
 import com.sz.randombark.feature.data.repository.RandomDogRepository
 import com.sz.randombark.feature.data.repository.RandomDogRepositoryImpl
 import dagger.Module
