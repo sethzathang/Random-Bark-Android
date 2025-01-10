@@ -19,7 +19,7 @@ import com.sz.randombark.common.ViewState
 
 data class RandomDogUIModel(
     val breed: String,
-    val imageUrl: String
+    val image: String
 )
 
 @Composable
@@ -46,10 +46,12 @@ fun RandomDogScreen(
                 }
 
                 is ViewState.Success -> {
-                    Text(text = "Breed: ${state.data.breed}")
+                    Text(
+                        modifier = Modifier.padding(bottom = 16.dp),
+                        text = state.data.breed
+                    )
                     AsyncImage(
-                        modifier = Modifier.padding(top = 16.dp),
-                        model = state.data.imageUrl,
+                        model = state.data.image,
                         contentDescription = "random dog image"
                     )
                     Button(

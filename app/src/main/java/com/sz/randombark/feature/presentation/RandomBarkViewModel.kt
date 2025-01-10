@@ -40,8 +40,10 @@ class RandomBarkViewModel @Inject constructor(
                     is ServiceResult.Success -> {
                         _viewState.value = ViewState.Success(
                             data = RandomDogUIModel(
-                                breed = extractAndFormatDogBreed(imageUrl = result.result.imageUrl),
-                                imageUrl = result.result.imageUrl
+                                breed = extractAndFormatDogBreed(
+                                    imageUrl = result.result.imageUrl
+                                ),
+                                image = result.result.imageUrl
                             )
                         )
                     }
@@ -50,9 +52,18 @@ class RandomBarkViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Find and extract the dog breed name between "breeds/" and the next "/" in the given image URL.
+     * If no match is found, it returns "Breed Information Unavailable".
+     * If the breed name contains a dash, it splits the name into separate words,
+     * capitalizes the first letter of each word, and joins them with a space.
+     *
+     * @param imageUrl The URL of the dog image
+     * @return The formatted dog breed name
+     */
     private fun extractAndFormatDogBreed(imageUrl: String): String {
-        val pattern = """/breeds/([^/]+)/""".toRegex()
-        val result = pattern.find(imageUrl)?.groups?.get(1)?.value ?: "Other"
+        val pattern = """breeds/([^/]+)/""".toRegex()
+        val result = pattern.find(imageUrl)?.groups?.get(1)?.value ?: "Breed Information Unavailable"
         return result.split("-").joinToString(" ") { word ->
             word.replaceFirstChar { data ->
                 if (data.isLowerCase()) {
@@ -63,4 +74,5 @@ class RandomBarkViewModel @Inject constructor(
             }
         }
     }
+
 }
