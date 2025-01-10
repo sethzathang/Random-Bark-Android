@@ -17,28 +17,20 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.sz.randombark.common.ViewState
 
-data class RandomDogUIModel(
-    val breed: String,
-    val image: String
-)
-
 @Composable
-fun RandomDogScreen(
-    modifier: Modifier = Modifier,
-    viewModel: RandomBarkViewModel
-) {
+fun RandomDogScreenCoroutine(viewModel: RandomBarkViewModel) {
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .padding(12.dp)
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        viewModel.viewState.collectAsStateWithLifecycle().value.let { state ->
+        viewModel.viewStateCoroutine.collectAsStateWithLifecycle().value.let { state ->
             when (state) {
                 is ViewState.Loading -> {
-                    CircularProgressIndicator(modifier = modifier)
+                    CircularProgressIndicator()
                 }
 
                 is ViewState.Error -> {
@@ -56,7 +48,7 @@ fun RandomDogScreen(
                     )
                     Button(
                         modifier = Modifier.padding(vertical = 16.dp),
-                        onClick = { viewModel.fetchRandomDog() },
+                        onClick = { viewModel.fetchRandomDogCoroutine() },
                         content = { Text(text = "Fetch") }
                     )
                 }

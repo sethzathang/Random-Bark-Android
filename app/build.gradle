@@ -45,6 +45,7 @@ android {
 
 dependencies {
     implementation libs.androidx.core.ktx
+    implementation libs.androidx.runtime.livedata
     implementation libs.androidx.lifecycle.runtime.ktx
     implementation libs.androidx.activity.compose
     implementation platform(libs.androidx.compose.bom)
@@ -63,6 +64,11 @@ dependencies {
     // Retrofit for network calls
     implementation libs.network.retrofit
     implementation libs.network.converter.gson
+
+    // RxJava
+    implementation libs.rxJava
+    implementation libs.rxAndroid
+    implementation libs.adapter.rxjava2
 
     //Testing
     testImplementation libs.junit
