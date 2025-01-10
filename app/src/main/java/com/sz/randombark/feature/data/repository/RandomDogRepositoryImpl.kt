@@ -13,12 +13,7 @@ import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 /**
- * [runCatching] - similar to try/catch, it executes the block of code and catches any exceptions.
- * [fold]- processes the result of runCatching
- * [flowOn] - ensures the network call is performed on the IO to avoid blocking the main thread
- * since network operations can take a long time to complete and performing on the main thread can block the UI.
- * It also allows multiple network requests or other IO operations to run concurrently in the background
- * without interfering with the main thread.
+ * Repository class responsible to grabbing the data from the service
  */
 class RandomDogRepositoryImpl @Inject constructor(
     private val network: NetworkService
@@ -26,6 +21,13 @@ class RandomDogRepositoryImpl @Inject constructor(
 
     /**
      * Fetch with Coroutine
+     *
+     * [runCatching] - similar to try/catch, it executes the block of code and catches any exceptions.
+     * [fold]- processes the result of runCatching
+     * [flowOn] - ensures the network call is performed on the IO to avoid blocking the main thread
+     * since network operations can take a long time to complete and performing on the main thread can block the UI.
+     * It also allows multiple network requests or other IO operations to run concurrently in the background
+     * without interfering with the main thread.
      */
     override suspend fun getRandomDogImageWithCoroutine(): Flow<ServiceResult<RandomDogImageReply>> =
         flow {
@@ -49,17 +51,30 @@ class RandomDogRepositoryImpl @Inject constructor(
         }.flowOn(Dispatchers.IO)
 
     /**
-     * Fetch with RxJava
+     * Fetches a random dog image using RxJava.
+     * @return An Observable emitting ServiceResult containing the RandomDogImageReply.
      */
     override fun getRandomDogImageWithRxJava(): Observable<ServiceResult<RandomDogImageReply>> =
+        // Fetches a random dog image from the network as an Observable
         network.fetchRandomDogImageWithRxJava()
+            // Converts the result to an Observable
             .toObservable()
+            // Maps the result to handle network results
             .map { result -> result.handleNetworkResults() }
+            // Handles any errors by returning a ServiceResult.Error
             .onErrorReturn { exception -> ServiceResult.Error(exception) }
+            // Starts the Observable sequence with a loading state
             .startWith(ServiceResult.Loading)
+            // Specifies that the Observable should operate on the I/O scheduler
+            // ensuring these tasks are performed on a background thread
             .subscribeOn(Schedulers.io())
+            // Observes the result on the main thread
             .observeOn(AndroidSchedulers.mainThread())
 
+    /**
+     * Extension function to handle network results.
+     * @return A ServiceResult indicating success or error based on the status of the response.
+     */
     private fun RandomDogImageReply.handleNetworkResults() =
         if (this.status.equals(other = "success", ignoreCase = true)) {
             ServiceResult.Success(result = this)

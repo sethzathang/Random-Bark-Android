@@ -15,25 +15,38 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel for fetching random dog images using Coroutine and RxJava.
+ *
+ * @property repository The repository to fetch the random dog images.
+ */
 @HiltViewModel
 class RandomBarkViewModel @Inject constructor(
     private val repository: RandomDogRepository
 ) : ViewModel() {
 
-    private val _viewStateCoroutine =
-        MutableStateFlow<ViewState<RandomDogUIModel>>(ViewState.Loading)
+    // StateFlow to hold the view state when using Coroutine
+    private val _viewStateCoroutine = MutableStateFlow<ViewState<RandomDogUIModel>>(ViewState.Loading)
     val viewStateCoroutine: StateFlow<ViewState<RandomDogUIModel>> = _viewStateCoroutine
 
+    // LiveData to hold the view state when using RxJava
     private val _viewStateRxJava = MutableLiveData<ViewState<RandomDogUIModel>>(ViewState.Loading)
     val viewStateRxJava: LiveData<ViewState<RandomDogUIModel>> get() = _viewStateRxJava
 
+    // CompositeDisposable to manage RxJava subscriptions
     private val compositeDisposable = CompositeDisposable()
 
+    /**
+     * Clears the CompositeDisposable to avoid memory leaks.
+     */
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.clear()
     }
 
+    /**
+     * Fetches a random dog image using Coroutine.
+     */
     fun fetchRandomDogCoroutine() {
         viewModelScope.launch {
             repository.getRandomDogImageWithCoroutine().collect { result ->
@@ -61,10 +74,16 @@ class RandomBarkViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Fetches a random dog image using RxJava.
+     */
     fun fetchRandomDogRxJava() {
+        //adding the subscription to the CompositeDisposable ensures that the
+        //subscription is properly managed and can be disposed of to prevent memory leaks.
         compositeDisposable.add(
-            repository.getRandomDogImageWithRxJava()
-                .subscribe({ result ->
+            //subscribes to the Observable returned by repository
+            repository.getRandomDogImageWithRxJava().subscribe(
+                { result ->
                     when (result) {
                         is ServiceResult.Loading -> {
                             _viewStateRxJava.value = ViewState.Loading
@@ -85,11 +104,14 @@ class RandomBarkViewModel @Inject constructor(
                             )
                         }
                     }
-                }, { error ->
+                },
+                { error ->
+                    // Handle any errors emitted by the Observable
                     _viewStateRxJava.value = ViewState.Error(
                         message = error.message ?: "Unknown Network Error"
                     )
-                })
+                }
+            )
         )
     }
 }
