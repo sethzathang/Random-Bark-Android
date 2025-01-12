@@ -11,3 +11,4 @@ It lets users view different dog breeds and enjoy cute dog images with each refr
 - **Retrofit** - for making API requests and handling responses
 - **Jetpack Compose** - for building the user interface
 - **Android Recommended Architecture** - The app follows the official https://developer.android.com/topic/architecture .
+- **Concurrency** - this app uses both **Kotlin Coroutines** and **RxJava** for handling asynchronous operations.
