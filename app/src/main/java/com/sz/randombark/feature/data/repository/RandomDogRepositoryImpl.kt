@@ -57,7 +57,7 @@ class RandomDogRepositoryImpl @Inject constructor(
     override fun getRandomDogImageWithRxJava(): Observable<ServiceResult<RandomDogImageReply>> =
         // Fetches a random dog image from the network as an Observable
         network.fetchRandomDogImageWithRxJava()
-            // Converts the result to an Observable
+            // Converts the result to an Observable to handle asynchronous operations effectively
             .toObservable()
             // Maps the result to handle network results
             .map { result -> result.handleNetworkResults() }
