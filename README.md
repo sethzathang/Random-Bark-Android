@@ -17,3 +17,5 @@ It lets users view different dog breeds and enjoy cute dog images with each refr
 - **Android Recommended Architecture** - The app follows the official https://developer.android.com/topic/architecture .
 - **Concurrency** - this app uses both **Kotlin Coroutines** and **RxJava** for handling asynchronous operations.
 
+### Demo Video: 
+[demo-video.webm](https://github.com/user-attachments/assets/d041bb25-c6f6-448d-abe0-b56deede05a9)
